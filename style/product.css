@@ -1,0 +1,275 @@
+
+html,body{
+  font-family: gilroy;
+}
+.main{
+  height: 120vh;
+  display: flex;
+  font-family: gilroy;
+
+  width: 100vw;
+}
+
+.temp{
+  height: 85vh;
+
+  width: 8vw;
+  position: relative;
+top: 10vh;
+  left: 5%;
+  overflow: scroll;
+
+}
+.temp::-webkit-scrollbar{
+  display: none;
+}
+.one{
+  height: 20vh;
+  border-radius: 15px;
+  width: 7vw;
+  margin: 5px;
+  background-size: cover; /* Ensures the background image covers the entire div */
+  background-position: center; /* Centers the background image within the div */
+
+  position: relative;
+  top: 1%;
+  left: 5.5%;
+  border: black solid 1px;
+
+  background-color: aqua;
+}
+.big{
+  height: 110vh;
+  width: 40vw;
+  top: 12vh;
+  position: relative;
+background-position: center;
+align-items: center;
+justify-self: center;
+  
+
+  left: 11%;
+}
+.prname{
+position: relative;
+left: 15%;
+font-size: 3vh ;
+width: 30%;
+
+top: 18%;
+}
+.stars{
+position: relative;
+left: -1%; 
+display: flex;
+}
+.price{
+  font-size: 30px;
+}
+.sizechart{
+  line-height: 10px;
+  
+  font-size: 20px;
+  display: flex;
+  cursor: pointer;
+}
+
+.size{
+  height: 8%;
+
+  width:8%;
+}
+.cart{
+
+position: relative;
+left: 40%;
+
+border-radius: 30px;
+color: #fff;
+font-size: 20px;
+
+
+}
+.fixedcart {
+  position: relative;
+
+}
+
+.cart-badge{
+ height: 20px;
+ width: 20px;
+ color: black;
+ position: relative;
+ left: 36%;
+ top: 14%;
+ padding-left: 6px;
+ padding-bottom: 1px;
+ border-radius: 20px;
+
+}
+.ct{
+  position: relative;
+
+  border-radius: 50%;
+
+  left: 7%;
+  top: -2%;
+
+
+  height: 50px;
+z-index: 99999;
+  width: 50px;
+
+
+  color: black;
+}
+.location{
+  display: flex;
+  font-size: 20px;
+   margin: 7px;
+}
+.pin{
+  font-size: 20px; 
+  margin-left: 20px;
+  border: none;
+  outline: none;
+}
+.check{
+  font-size: 20px;
+  position: relative;
+  left: -10%;
+}
+
+.inline-container {
+  white-space: nowrap;
+}
+
+.location-check-container {
+  margin-bottom: 10px; /* Adjust as needed */
+}
+
+.city, .estd {
+  display: inline;
+  margin: 0;
+  font-size: 15px;
+  padding: 0;
+}
+.cartpage {
+  height: 100vh;
+  width: 30vw;
+  position: absolute;
+  top: 0;
+  right: -30vw; /* Ensure it aligns to the right of the page */
+  z-index: 9;
+  overflow: scroll;
+  background-color: white;
+}
+.cartpage::-webkit-scrollbar{
+  display: none;
+}
+.cart1 {
+  position: relative;
+  cursor: pointer;
+  top: 3%;
+  left: 5%;
+  height: 30px;
+}
+
+.line {
+  height: 1px;
+  width: 100%; /* Make it take the full width */
+  position: relative;
+  top: 5%;
+  background: #000;
+}
+
+.cartclose {
+  position: absolute;
+  right: 10px; /* Adjusted for better placement */
+  top: 10px;
+  cursor: pointer;
+}
+
+.cartimg {
+  height: 10vh;
+  width: 8vw;
+  background-color: blueviolet;
+  margin-top: 60px;
+  margin-left: 5%;
+}
+
+.details-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.namecart {
+  display: flex;
+  flex-direction: column;
+  
+margin-left: 180px;
+margin-top: -70px;
+  left: 40%;
+  gap: 1px;
+
+  font-family: gilroy; 
+  font-size: 20px;
+}
+
+.quantity {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  width: 100px;
+  border-radius: 10px;
+ margin-left: 12px;
+  padding: 5px;
+  background-color: transparent;
+  border: 1px solid black;
+}
+
+.btquan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.removeBtn {
+  position: relative;
+ margin-left: 220px;
+
+  margin-top: -42px;
+  background: red;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.car{
+  height: 7vh;
+position: relative;
+left: 0%;
+margin-top: 20px;
+border-radius: 30px;
+color: #fff;
+font-size: 20px;
+background: purple;
+  width: 30vw;
+}
