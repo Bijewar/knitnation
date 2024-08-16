@@ -10,18 +10,24 @@
     "rules": "storage.rules"
   },
   "hosting": {
-    "public": "out",
+    "public": ".next",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      ".env"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
+      "**/node_modules/**"
     ]
-  }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
 }

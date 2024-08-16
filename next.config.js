@@ -30,10 +30,10 @@ module.exports = withImages({
     NEXT_PUBLIC_OWNER_UID: process.env.NEXT_PUBLIC_OWNER_UID,
     CASHFREE_APP_ID: process.env.CASHFREE_APP_ID,
     CASHFREE_SECRET_KEY: process.env.CASHFREE_SECRET_KEY,
-  },
+  }, 
   images: {
     domains: ['firebasestorage.googleapis.com'],
   },
   reactStrictMode: true,
-  output: 'export',
+  trailingSlash: true, // updated key from exportTrailingSlash to trailingSlash
 });

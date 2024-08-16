@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Toaster, toast } from 'react-hot-toast';
+import css from "../../style/register.css"
 import dynamic from 'next/dynamic';
 import { useDispatch } from 'react-redux';
 import Layout from '../layout';
 import { setUser } from '../../redux/slices';
-import { Toaster } from 'react-hot-toast';
 import { BsFillShieldLockFill } from "react-icons/bs";
+import Link from 'next/link'
 import { CgSpinner } from "react-icons/cg";
 import withReduxProvider from '../hoc';
 
@@ -28,10 +30,12 @@ const RegistrationForm = () => {
   useEffect(() => {
     // Initialize Firebase only on the client side
     const initFirebase = async () => {
+      const { initializeApp } = await import('firebase/app');
       const { getAuth, RecaptchaVerifier } = await import('firebase/auth');
       const { addUserToFirestore } = await import('../../stores');
       const auth = getAuth();
       auth.languageCode = 'en';
+
       
       window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
         'size': 'invisible',
@@ -49,7 +53,6 @@ const RegistrationForm = () => {
       initFirebase();
     }
   }, []);
-
   const sendOtp = async (e) => {
     e.preventDefault();
     if (typeof window === 'undefined') return;
@@ -99,11 +102,13 @@ const RegistrationForm = () => {
       setLoading(false);
     }
   };
-
+  
+  
   return (
     <Layout>
       <div className="custom-wrapper">
-        <Toaster toastOptions={{ duration: 4000 }} />
+      <Toaster toastOptions={{ duration: 4000 }} />
+
         <div id="recaptcha-container"></div>
         <div className="custom-image-wrapper">
           <img src="/logo.png" alt="Logo" />
@@ -183,7 +188,10 @@ const RegistrationForm = () => {
                 </>
               )}
             </form>
-            <p className='alr'>Already have an account? <a href="/login">Login</a></p>
+            <p className='alr'>
+              Already have an account?{' '}
+              <Link href="/login">Login</Link>
+            </p>
           </div>
         </div>
       </div>
@@ -191,4 +199,4 @@ const RegistrationForm = () => {
   );
 };
 
-export default withReduxProvider (RegistrationForm);
+export default withReduxProvider(RegistrationForm);

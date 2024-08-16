@@ -7,7 +7,7 @@ import {
   productsReducer,
   cartReducer,
   uiReducer,
-} from './slices'; // Ensure this path is correct
+} from './slices';
 
 const rootReducer = combineReducers({
   cityAndDelivery: cityAndDeliveryReducer,
@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['cart'], // Only persist the cart slice
+  whitelist: ['cart'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

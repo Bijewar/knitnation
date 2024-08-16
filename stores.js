@@ -220,9 +220,10 @@ const addUserToFirestore = async (userId, email, fullName, phoneNumber) => {
     console.log(`Adding user to Firestore: ${userId}`);
     const userDocRef = await addDoc(collection(db, 'users'), {
       userId,
+      phoneNumber, // Ensure this field is correctly added
+
       email,
       fullName,
-      phoneNumber,
       createdAt: Timestamp.now()
     });
     console.log(`User "${fullName}" added to Firestore successfully with ID: ${userDocRef.id}`);
@@ -268,11 +269,24 @@ export const checkUserExists = async (email, phoneNumber) => {
   
   return !emailSnapshot.empty || !phoneSnapshot.empty;
 };
+const fetchUsers = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'users'));
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data() // This should include phoneNumber if it's in the document
+    }));
+  } catch (error) {
+    console.error('Error fetching users:', error.message);
+    throw error;
+  }
+};
 
 // Export functions for use in other modules
 export {
   addProductToFirestore,
   updateProductsWithId,
+  fetchUsers,
   addUserToFirestore,
   updateAllProductsWithIds,
   addProductsInBulk,

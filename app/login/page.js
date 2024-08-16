@@ -70,8 +70,11 @@ const LoginForm = () => {
               </div>
               <p className='alr'>
   Don't have an account  
-  <Link href="/register">Register here</Link>
+  <Link href="/register" legacyBehavior>
+    <a>Register</a>
+  </Link>
 </p>
+
               <button className='registerbtn' type="submit" disabled={loading}>
                 {loading ? 'Logging in...' : 'Login'}
               </button>

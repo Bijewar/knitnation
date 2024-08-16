@@ -129,14 +129,25 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState: {
     items: [],
+    isAuthenticated: false,
   },
   reducers: {
+    setAuthenticated(state, action) {
+      state.isAuthenticated = action.payload;
+    },
     addToCart(state, action) {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      if (existingItem) {
-        existingItem.quantity += action.payload.quantity;
+      // Handle both single item and array of items
+      if (Array.isArray(action.payload)) { 
+        // If payload is an array (for fetching from database/local storage)
+        state.items = action.payload; 
       } else {
-        state.items.push({ ...action.payload, quantity: 1 });
+        // If payload is a single item (for adding new items)
+        const existingItem = state.items.find(item => item.id === action.payload.id);
+        if (existingItem) {
+          existingItem.quantity += 1; // Or action.payload.quantity if you want to allow adding multiple at once
+        } else {
+          state.items.push({ ...action.payload, quantity: 1 });
+        }
       }
     },
     updateQuantity(state, action) {
@@ -156,7 +167,9 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, updateQuantity, removeFromCart, clearCart } = cartSlice.actions;
+
+export const { addToCart, updateQuantity,  setAuthenticated, // Make sure this is exported
+  removeFromCart, clearCart } = cartSlice.actions;
 export const cartReducer = cartSlice.reducer;
 
 // UI Slice
