@@ -1,13 +1,10 @@
-@font-face {
-  font-family: Voyage;
-  src: url(../public/11_91233_voyage-regular.ttf);
-}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html,body{
-  font-family: Voyage;
+  font-family: gilroy;
   letter-spacing: 1px;
 }
 /* Apply Tailwind CSS utility classes within custom CSS */
@@ -38,12 +35,15 @@ html,body{
 }
 
 .custom-form-inner {
-  @apply w-full   max-w-md p-8 bg-white rounded-lg shadow-lg;
+  @apply w-full   max-w-md p-8 bg-white rounded-xl shadow-lg;
   height: 70vh;
 }
 
 .custom-title {
-  @apply text-3xl font-bold mb-6;
+  margin-bottom: 34px;
+  color: blue;
+  font-family: voyage;
+  letter-spacing: 2px;
 }
 
 .custom-form {
@@ -286,6 +286,10 @@ background: whitesmoke;
   color: black;
   width: 60vw;
 
+}
+.alr{
+  margin-top: 20px;
+  margin-left: 18px;
 }
 }
 

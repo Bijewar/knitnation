@@ -13,6 +13,9 @@ import Link from 'next/link'
 import { CgSpinner } from "react-icons/cg";
 import withReduxProvider from '../hoc';
 
+// Import the PhoneInput component
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css'; 
 // Dynamically import components that use browser-only APIs
 const OtpInput = dynamic(() => import("otp-input-react"), { ssr: false });
 
@@ -150,13 +153,13 @@ const RegistrationForm = () => {
                     />
                   </div>
                   <div className="custom-form-group">
-                    <input
-                      id="phoneNumber"
-                      placeholder="Phone Number"
-                      required
-                      type="tel"
+                    <PhoneInput
+                      placeholder="Enter phone number"
                       value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      onChange={setPhoneNumber}
+                      defaultCountry="IN" // Set default country to India (optional)
+                      international // Display country codes
+                      required
                     />
                   </div>
                   <button id="sign-in-button" type="submit" disabled={loading} className="bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded top-10 relative">
