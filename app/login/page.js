@@ -82,7 +82,7 @@ const LoginForm = () => {
                 </button>
                 <br />
                 <Link href="/register" passHref legacyBehavior>
-                  <a className='newacc'>Create a nw Account</a>
+                  <a className='newacc'>Create a new Account</a>
                 </Link>
               </div>
             </div>
