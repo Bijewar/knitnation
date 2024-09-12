@@ -5,9 +5,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html,body{
   font-family: gilroy;
+  height: 100%;
+width: 100%;
 }
 /* Apply Tailwind CSS utility classes within custom CSS */
 .manas {
@@ -35,7 +42,7 @@ html,body{
 
 .custom-form-inner {
   @apply w-full  max-w-md p-8 bg-white rounded-lg shadow-lg;
-  height: 40vh;
+  height: 60vh;
 }
 
 .custom-title {
@@ -48,6 +55,10 @@ html,body{
 
 .custom-form-group {
   margin: 20px;
+  width: 100%;
+  color: black;
+  background-color: transparent;
+  font-size: large;
 }
 
 .eml{
@@ -157,13 +168,14 @@ input:focus {
 
 .registerbtn{
   font-family: gilroy;
-  height: 3.5vh;
-  position: relative;
-
-top: 8%;
+  height: 5vh;
+  width: 22vw;
+position: relative;
+z-index: 9;
+left: 5%;
+top: 1%;
 font-weight: 500;
-  width: 15vw;
-background-color: rgb(101, 31, 166);
+background-color: rgba(0, 128, 0, 0.895);
 color: #f5f5f5;
 border-radius: 5px;
 box-shadow: .5px .5px .5px .5px rgb(84, 83, 83) ;
@@ -176,26 +188,77 @@ box-shadow: .5px .5px .5px .5px rgb(84, 83, 83) ;
 .alr{
   
   color: blue;
-  position: absolute;
-  top: 45%;
-  left: 62.5%;
-  font-size: 15px;
-  @apply mt-4
-}
-.google-btn{
   position: relative;
-  border-radius: 5px;
-  box-shadow: .5px .5px .5px .5px rgb(84, 83, 83) ;
-  height: 3.5vh;
-  width: 15vw;
-  top: 20%;
-  background-color: #e2e8f0;
-  color: black;
-
+  top: 23%;
+  left: 33%;
+  font-size: 17px;
 }
-.gogle{
-  height: 50%;
-  position: absolute;
-  top: 25%;
-left: 10%;
+.newacc{
+  position: relative;
+  height: 40px;
+  width: 22vw;
+  color: black;
+  left: 5%;
+  border-radius: 50px;
+  border: 1px solid black;
+  top: 45%;
+  background-color: white;
+}
+@media (max-width: 480px) {
+  .custom-image-wrapper{
+    height: 20vh;
+    position: relative;
+    left: 23%;
+  }
+  .custom-image-wrapper img{
+    height: 20vh;
+margin-top: 20%;
+
+  }
+  .custom-form-wrapper{
+    position: absolute;
+left: 25%;
+    top:25%;
+  }
+  .custom-form-inner{
+    width: 100vw;
+    background-color: transparent;
+    border-radius: 20px;
+height: 60vh;
+  }
+  .custom-form-group input{
+    border: 1px solid black;
+    border-radius: 10px;
+    left: 5%;
+    position: relative;
+    padding: 10px;
+    background-color: transparent;
+  }
+  .registerbtn{
+    position: relative;
+    height: 5vh;
+    width: 70vw;
+    left: 0%;
+    top: 5%;
+  }
+  .alr{
+  
+    color: blue;
+    position: absolute;
+    top: 51%;
+    width: 100vw;
+    left: 13%;
+    font-size: 17px;
+  }
+  .newacc{
+    position: relative;
+    height: 40px;
+    width: 70vw;
+    color: black;
+    left: 0%;
+    background-color: transparent;
+    border-radius: 50px;
+    border: 1px solid black;
+    top: 45%;
+  }
 }

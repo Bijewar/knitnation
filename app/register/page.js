@@ -120,77 +120,90 @@ const RegistrationForm = () => {
           <div className="custom-form-inner">
             <h1 className="custom-title">Register Your Account</h1>
             <form className="custom-form" onSubmit={showOtpInput ? handleVerifyOtp : sendOtp}>
-              {!showOtpInput ? (
-                <>
-                  <div className="custom-form-group">
-                    <input
-                      id="name"
-                      placeholder="Full Name"
-                      required
-                      type="text"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                    />
-                  </div>
-                  <div className="custom-form-group">
-                    <input
-                      id="email"
-                      placeholder="Enter your email"
-                      required
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="custom-form-group">
-                    <input
-                      id="password"
-                      placeholder="Password"
-                      required
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
-                  <div className="custom-form-group">
-                    <PhoneInput
-                      placeholder="Enter phone number"
-                      value={phoneNumber}
-                      onChange={setPhoneNumber}
-                      defaultCountry="IN" // Set default country to India (optional)
-                      international // Display country codes
-                      required
-                    />
-                  </div>
-                  <button id="sign-in-button" type="submit" disabled={loading} className="bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded top-10 relative">
-                    {loading && <CgSpinner size={20} className="mt-1 animate-spin" />}
-                    <span>Send code via SMS</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className="bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full">
-                    <BsFillShieldLockFill size={30} />
-                  </div>
-                  <label htmlFor="otp" className="font-bold text-xl text-center">
-                    Enter your OTP
-                  </label>
-                  <OtpInput
-                    value={otp}
-                    onChange={setOtp}
-                    OTPLength={6}
-                    otpType="number"
-                    disabled={false}
-                    autoFocus
-                    className="opt-container"
-                  />
-                  <button type="submit" disabled={loading} className="bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded">
-                    {loading && <CgSpinner size={20} className="mt-1 animate-spin" />}
-                    <span>Verify OTP</span>
-                  </button>
-                </>
-              )}
-            </form>
+  {!showOtpInput ? (
+    <>
+      <div className="custom-form-group">
+        <input
+          id="name"
+          placeholder="Full Name"
+          required
+          type="text"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+        />
+      </div>
+      <div className="custom-form-group">
+        <input
+          id="email"
+          placeholder="Enter your email"
+          required
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+      <div className="custom-form-group">
+        <input
+          id="password"
+          placeholder="Password"
+          required
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <div className="custom-form-group">   
+
+        <PhoneInput
+          placeholder="Enter phone number"
+          value={phoneNumber}
+          onChange={setPhoneNumber}
+          defaultCountry="IN" 
+          international 
+          required
+        />
+      </div>
+      <button id="sign-in-button" type="submit" disabled={loading} className="bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded top-10 relative">
+        {loading && <CgSpinner size={20} className="mt-1 animate-spin" />}
+        <span>Send code via SMS</span>
+      </button>
+
+      {/* Conditional rendering of the "Already have an account" link */}
+      {!showOtpInput && (
+        <p className='alr'>
+          Already have an account?{' '}
+          <Link href="/login">Login</Link>
+        </p>
+      )}
+    </>
+  ) : (
+    <>
+      <div className="bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full">
+        <BsFillShieldLockFill size={30} />
+      </div>
+      <label htmlFor="otp" className="font-bold text-xl   
+ text-center">
+        Enter your OTP
+      </label>
+      <OtpInput
+        value={otp}
+        onChange={setOtp}
+        OTPLength={6}
+        otpType="number"
+        disabled={false}
+        autoFocus
+        className="opt-container"   
+
+      />
+      <button type="submit" disabled={loading} className="bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded">
+        {loading && <CgSpinner size={20} className="mt-1 animate-spin" />}
+        <span className='mt-5'>Verify OTP</span>
+      </button>   
+
+    </>
+  )}
+</form>   
+
             <p className='alr'>
               Already have an account?{' '}
               <Link href="/login">Login</Link>
