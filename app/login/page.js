@@ -43,15 +43,18 @@ const LoginForm = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Login</title> {/* Adding a title for the page */}
       </Head>
-      <div>
+   
         <Toaster toastOptions={{ duration: 4000 }} />
         <form onSubmit={handleLogin}>
-          <div className="custom-wrapper">
+         
+        </form>
+        <div className="custom-wrapper">
             <div className="custom-image-wrapper">
               <img src="/logo.png" alt="Logo" />
             </div>
             <div className="custom-form-wrapper">
               <div className="custom-form-inner">
+             
                 <div className="custom-form-group">
                   <input
                     id="email"
@@ -62,6 +65,7 @@ const LoginForm = () => {
                     required
                   />
                 </div>
+    
                 <div className="custom-form-group">
                   <input
                     id="password"
@@ -72,23 +76,32 @@ const LoginForm = () => {
                     required
                   />
                 </div>
-                <p className='alr'>
+                
+               
+         
+                <button className='registerbtn' type="submit" disabled={loading}>
+                  {loading ? 'Logging in...' : 'Login'}
+                </button>
+                <p className='alrt'>
                   <Link href="/register" legacyBehavior>
                     <a>Forgot password?</a>
                   </Link>
                 </p>
-                <button className='registerbtn' type="submit" disabled={loading}>
-                  {loading ? 'Logging in...' : 'Login'}
-                </button>
-                <br />
-                <Link href="/register" passHref legacyBehavior>
-                  <a className='newacc'>Create a new Account</a>
-                </Link>
+<br />
+<Link href="/register" className="newacc">
+  Create a new Account
+</Link>
+            
+   
+                   
+              
+
+           
               </div>
+          
             </div>
+         
           </div>
-        </form>
-      </div>
     </>
   );
 };
