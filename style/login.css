@@ -246,8 +246,8 @@ margin-top: 20%;
   .custom-form-group input{
     border: 1px solid black;
     border-radius: 10px;
-    width: 85%;
-    left: -5%;
+    width: 100%;
+    left: -8%;
     padding: 5px;
     background-color: transparent;
     position: relative;
@@ -258,7 +258,7 @@ margin-top: 20%;
     height: 5vh;
     width: 70vw;
     font-family: gilroy;
-    left: 0%;
+    left: -1%;
     top: 5%;
   }
   .alrt{
@@ -283,7 +283,7 @@ width: 70vw;
     text-align: center; /* Center the text within the element */
     position: absolute; 
     top: 75%;
-    left: 50%; 
+    left: 50.5%; 
     transform: translateX(-50%); /* Horizontal centering */
   }
   
