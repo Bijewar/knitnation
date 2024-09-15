@@ -245,7 +245,7 @@ left: 5%;
     background-color: transparent;
     border-radius: 20px;
 height: 60vh;
-margin-top: 20%;
+margin-top: 15%;
   }
   .custom-form-group{
     width: 100%;
@@ -275,7 +275,7 @@ margin-top: 20%;
   
     color: blue;
     position: absolute;
-    top: 50%;
+    top: 53%;
     left: 30%;
     opacity: .8;
     font-size: 17px;
