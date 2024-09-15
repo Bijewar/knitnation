@@ -1,7 +1,4 @@
-// Updated LoginForm.js
-
 "use client";
-
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
@@ -9,10 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { setUser, setError } from '../../redux/slices';
-import css from '../../style/login.css'; // Ensure this file is being correctly imported
 import { auth } from '../../firebase';
 import withReduxProvider from '../hoc';
-import { toast, Toaster } from 'react-hot-toast'; // Added Toaster import
+import { toast, Toaster } from 'react-hot-toast';
+import css from '../../style/login.css'
+import Layout from '../layout';
+import { CgSpinner } from "react-icons/cg";
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -26,9 +25,10 @@ const LoginForm = () => {
     setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('Login successful!');
+      console.log('Login successful!', userCredential);
       dispatch(setUser(userCredential.user));
       toast.success('Logged in successfully!');
+      console.log('Redirecting to /home...');
       router.push('/home');
     } catch (error) {
       console.error('Login error:', error);
@@ -40,21 +40,21 @@ const LoginForm = () => {
   };
 
   return (
-    <>
+    <Layout>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Login</title>
       </Head>
 
-      <Toaster toastOptions={{ duration: 4000 }} />
-
-      <form onSubmit={handleLogin}>
-        <div className="custom-wrapper">
-          <div className="custom-image-wrapper">
-            <img src="/logo.png" alt="Logo" />
-          </div>
-          <div className="custom-form-wrapper">
-            <div className="custom-form-inner">
+      <div className="custom-wrapper">
+        <Toaster toastOptions={{ duration: 4000 }} />
+        <div className="custom-image-wrapper">
+          <img src="/logo.png" alt="Logo" />
+        </div>
+        <div className="custom-form-wrapper">
+          <div className="custom-form-inner">
+            <h1 className="custom-title">Login to Your Account</h1>
+            <form onSubmit={handleLogin} className="custom-form">
               <div className="custom-form-group">
                 <input
                   id="email"
@@ -77,25 +77,23 @@ const LoginForm = () => {
                 />
               </div>
 
-              <button className="registerbtn" type="submit" disabled={loading}>
-                {loading ? 'Logging in...' : 'Login'}
+              <button className="custom-button" type="submit" disabled={loading}>
+                {loading && <CgSpinner size={20} className="custom-spinner" />}
+                <span>{loading ? 'Logging in...' : 'Login'}</span>
               </button>
 
-              <p className="alrt">
-                <Link href="/register">
-                  Forgot password?
-                </Link>
-              </p>
-
-              <br />
-              <Link href="/register" className="newacc">
-                Create a new Account
+              <Link href="/forgot-password" className="alrt">
+                Forgot password?
               </Link>
-            </div>
+
+              <Link href="/register" className="newacc">
+              Create a new Account
+            </Link>
+            </form>
           </div>
         </div>
-      </form>
-    </>
+      </div>
+    </Layout>
   );
 };
 

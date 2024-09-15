@@ -41,8 +41,8 @@ html,body{
 
 .custom-title {
   margin-bottom: 34px;
-  color: blue;
-  font-family: voyage;
+  color: black;
+  font-size: 20px;
   letter-spacing: 2px;
 }
 
@@ -52,12 +52,29 @@ html,body{
 }
 
 .custom-form-group {
-  margin: 20px;
   border: none;
 
   outline: none;
 }
+.poned{
+  position: absolute;
+  bottom: 50%;
+}
+.logon{
+  display: inline-block; /* Allows the button to maintain its size */
+    color: black;
+    background-color: transparent;
+    border-radius: 50px;
+width: 25vw;
+    border: 1px solid black;
+    padding: 8px 20px; /* More padding for a better look */
 
+    text-align: center; /* Center the text within the element */
+    position: absolute; 
+    top: 72%;
+    left: 75.5%; 
+    transform: translateX(-50%); /* Horizontal centering */
+}
 .eml{
   border: none;
   outline: none;
@@ -230,9 +247,9 @@ input:focus {
   transform: translate(-50%,50%);
 
   position: absolute;
-  top: -24%;
+  top: -14%;
   left: 50%;
-   height: 30%;
+   height: 20vh;
   width: 30%;
 }
 .custom-wrapper{
