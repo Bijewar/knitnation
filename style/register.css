@@ -249,8 +249,7 @@ input:focus {
   position: absolute;
   top: -14%;
   left: 50%;
-   height: 20vh;
-  width: 30%;
+   height: 25vh;
 }
 .custom-wrapper{
   display: block;
@@ -258,10 +257,10 @@ input:focus {
 .custom-form-inner{
   position: absolute;
 
-  left: 10%;
-  height: 75vh;
-  top: 15%;
-  width: 80vw;
+  left: 5%;
+  height: 65vh;
+  top: 20%;
+  width: 90vw;
 
 
 }
@@ -307,6 +306,11 @@ background: whitesmoke;
 .alr{
   margin-top: 20px;
   margin-left: 18px;
+}
+.logon{
+  width: 80vw;
+  left: 50%;
+  top: 80%;
 }
 }
 
