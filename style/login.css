@@ -256,7 +256,7 @@ margin-top: 15%;
   .custom-form-group input{
     border: 1px solid black;
     border-radius: 10px;
-    width: 100%;
+    width: 100vw;
     left: -8%;
     padding: 5px;
     background-color: transparent;
