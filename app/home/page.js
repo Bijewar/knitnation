@@ -9,7 +9,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import updateAllProductsWithIds from '../../stores'
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Slshow from '../comp/slshow'
 import seel from '../../style/seel.css'
 import '../../style/slide.css'; // Adjust path to your CSS file
@@ -49,7 +48,8 @@ const Home = () => {
   const dispatch = useDispatch();
   const womensProducts = useSelector(state => state.products.women);
 console.log("womensProducts from Redux:", womensProducts);
-  const cartItems = useSelector((state) => state.cart.items[user?.uid] || []);
+  const cartItems = useSelector(state => state.cart.items); // Get cart items
+
   const slideshowDuration = 5000; // milliseconds
   const imageNames = ['one', 'two', 'three', 'four', 'five'];
   const numberToWord = number =>
@@ -60,14 +60,7 @@ console.log("womensProducts from Redux:", womensProducts);
   const HOVER_FLASH_DURATION = 0.3; // Smooth transition duration
   const HOVER_FADE_DURATION = 0.3; // Smooth transition duration
   const TRANSITION_TIMEOUT = 200;
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-  
-    return () => unsubscribe();
-  }, []);
+
   let isTransitioning = false;
 
   const handleProductHovers = (productIndex) => {
@@ -114,10 +107,20 @@ console.log("womensProducts from Redux:", womensProducts);
   };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(currentUser => {
-      setUser(currentUser);
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        if (
+          router.pathname !== '/product-details' &&
+          router.pathname !== '/home'
+        ) {
+          router.replace('/login');
+        }
+      }
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);
+
   useEffect(() => {
     let intervalId;
 
@@ -321,32 +324,18 @@ console.log("womensProducts from Redux:", womensProducts);
     return filteredProducts;
   };
   const handleBuyNow = (product) => {
-    console.log('Product to buy:', product);
+    console.log('Product to buy:', product); // Check product data
     if (product && product.id) {
-      const path = `/product/${product.id}`;
-      if (typeof window !== 'undefined') {
-        try {
-          // Try using Next.js routing first
-          const result = router.push(path);
-          if (result && typeof result.catch === 'function') {
-            result.catch(() => {
-              // If Next.js routing fails, fall back to window.location
-              window.location.href = path;
-            });
-          }
-        } catch (error) {
-          console.error('Navigation error:', error);
-          // Fallback to window.location if an error occurs
-          window.location.href = path;
-        }
-      } else {
-        // For server-side rendering scenarios
-        router.push(path);
-      }
+      <Link href={`/product/${product.id}`}>
+      <a>Buy Now</a>
+    </Link>
     } else {
       console.error('Invalid product data:', product);
     }
   };
+  
+  
+  
   
   const filteredProducts = getFilteredProducts();
   return (
@@ -675,4 +664,3 @@ console.log("womensProducts from Redux:", womensProducts);
 };
 
 export default withReduxProvider(Home);
-

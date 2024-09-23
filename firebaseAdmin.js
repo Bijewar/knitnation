@@ -1,8 +1,7 @@
-var admin = require("firebase-admin");
-
-var serviceAccount = require("../knitnation/service.json");
+const admin = require('firebase-admin');
+const serviceAccount = require('/path/to/your-service-account-file.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://ecom-5efc6-default-rtdb.asia-southeast1.firebasedatabase.app"
+  databaseURL: "https://<your-database-name>.firebaseio.com"
 });

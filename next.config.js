@@ -1,8 +1,19 @@
 const path = require('path');
+const withOptimizedImages = require('next-optimized-images');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+module.exports = withBundleAnalyzer({});
+
 const withImages = require('next-images');
 require('dotenv').config();
 
 module.exports = withImages({
+  swcMinify: true,
+
+    productionBrowserSourceMaps: false,
+
   webpack: (config, { isServer }) => {
     config.resolve.alias['@'] = path.resolve(__dirname);
 
@@ -34,6 +45,8 @@ module.exports = withImages({
   images: {
     domains: ['firebasestorage.googleapis.com'],
   },
+
+  
   reactStrictMode: true,
   trailingSlash: true, // updated key from exportTrailingSlash to trailingSlash
 });

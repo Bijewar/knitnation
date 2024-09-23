@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -17,7 +18,7 @@ const settings = {
   dots: false,
   infinite: true,
   speed: 500,
-  slidesToShow: 4, // Show 4 slides at a time
+  slidesToShow: 4,
   slidesToScroll: 1,
   responsive: [
     {
@@ -42,7 +43,13 @@ const settings = {
 };
 
 const TopCategories = () => {
+  const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
   const sliderRef = React.useRef(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const nextSlide = () => {
     sliderRef.current.slickNext();
@@ -52,6 +59,19 @@ const TopCategories = () => {
     sliderRef.current.slickPrev();
   };
 
+  const handleSlideClick = (index) => {
+    if (index === 0) {
+      console.log('Attempting to redirect to jeans category');
+      router.push('/collection/jeans');
+    } else {
+      console.log(`No specific action for slide at index ${index}`);
+    }
+  };
+
+  if (!isMounted) {
+    return null; // Prevent rendering on server
+  }
+
   return (
     <div className="carousel-container">
       <button className="carousel-button left" onClick={prevSlide}>
@@ -59,7 +79,12 @@ const TopCategories = () => {
       </button>
       <Slider ref={sliderRef} {...settings}>
         {images.map((image, index) => (
-          <div key={index} className="carousel-image">
+          <div
+            key={index}
+            className="carousel-image"
+            onClick={() => handleSlideClick(index)}
+            style={{ cursor: 'pointer' }}
+          >
             <img src={image} alt={`Slide ${index}`} className="carousel-photo" />
           </div>
         ))}
