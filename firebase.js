@@ -5,15 +5,15 @@ import { initializeApp, getApps } from 'firebase/app';
    import { getStorage } from 'firebase/storage';
 
    const firebaseConfig = {
-      apiKey: AIzaSyDaXMaan6ddMKXUq8y0Z5Ei6e3-Ofq5U18      ,
-      authDomain: `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`,
-      databaseURL: `https://${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}-default-rtdb.asia-southeast1.firebasedatabase.app`,
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-      appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-      measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-    };
+    apiKey: "AIzaSyDaXMaan6ddMKXUq8y0Z5Ei6e3-Ofq5U18",
+    authDomain: "ecom-5efc6.firebaseapp.com",
+    databaseURL: "https://ecom-5efc6-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "ecom-5efc6",
+    storageBucket: "ecom-5efc6.appspot.com",
+    messagingSenderId: "908582468128",
+    appId: "1:908582468128:web:b2efee3a63df039f685a45",
+    measurementId: "G-SR38XLGDX3"
+  };
    
 
    let app;
