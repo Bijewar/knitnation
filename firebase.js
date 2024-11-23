@@ -1,11 +1,11 @@
 import { initializeApp, getApps } from 'firebase/app';
    import { getFirestore } from 'firebase/firestore';
-   import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+   import { getAuth, RecaptchaVerifier} from "firebase/auth";
 
    import { getStorage } from 'firebase/storage';
 
    const firebaseConfig = {
-      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+      apiKey: AIzaSyDaXMaan6ddMKXUq8y0Z5Ei6e3-Ofq5U18      ,
       authDomain: `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`,
       databaseURL: `https://${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}-default-rtdb.asia-southeast1.firebasedatabase.app`,
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
