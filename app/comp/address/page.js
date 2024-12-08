@@ -274,7 +274,7 @@ async function getUserDetails(userId) {
       </div>
       <div className="space-y-6">
         <div className="grid gap-2">
-          <Label htmlFor="promo-code">Promo Code</Label>
+          <Label htmlFor="promo-code">Promo Codes</Label>
           <div className="flex gap-2">
             <Input
               id="promo-code"
