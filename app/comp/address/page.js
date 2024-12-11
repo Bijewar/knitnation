@@ -354,7 +354,7 @@ async function getUserDetails(uid) {
     </div>
     <div className="mt-8 flex justify-end">
     <Button onClick={handlePlaceOrder} disabled={!isCashfreeLoaded}>
-  {isCashfreeLoaded ? "Place Order" : "Loading Cashfree..."}
+  {isCashfreeLoaded ? "Place Order" : "Loadings Cashfree..."}
 </Button>
 
     </div>
