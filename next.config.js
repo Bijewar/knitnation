@@ -1,18 +1,12 @@
+const dotenv = require('dotenv');
+dotenv.config(); // This ensures that the environment variables are loaded
+
 const path = require('path');
-const withOptimizedImages = require('next-optimized-images');
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
-
-module.exports = withBundleAnalyzer({});
-
 const withImages = require('next-images');
-require('dotenv').config();
 
 module.exports = withImages({
   swcMinify: true,
-
-    productionBrowserSourceMaps: false,
+  productionBrowserSourceMaps: false,
 
   webpack: (config, { isServer }) => {
     config.resolve.alias['@'] = path.resolve(__dirname);
@@ -30,6 +24,7 @@ module.exports = withImages({
 
     return config;
   },
+
   env: {
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -41,12 +36,12 @@ module.exports = withImages({
     NEXT_PUBLIC_OWNER_UID: process.env.NEXT_PUBLIC_OWNER_UID,
     CASHFREE_APP_ID: process.env.CASHFREE_APP_ID,
     CASHFREE_SECRET_KEY: process.env.CASHFREE_SECRET_KEY,
-  }, 
+  },
+
   images: {
     domains: ['firebasestorage.googleapis.com'],
   },
 
-  
   reactStrictMode: true,
-  trailingSlash: true, // updated key from exportTrailingSlash to trailingSlash
+  trailingSlash: true,
 });

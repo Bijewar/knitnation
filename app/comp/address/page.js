@@ -1,10 +1,11 @@
 "use client";
+import { initializeSDK } from '/app/api/cashfree/route';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { Label } from "@/app/comp/address/ui/label";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs,setDoc,getDoc,doc } from 'firebase/firestore';
 import { db } from '../../../firebase'; // Adjust the import path as needed
 
 import { Input } from "@/app/comp/address/ui/input";
@@ -35,27 +36,18 @@ function Component() {
   const [isCashfreeLoaded, setIsCashfreeLoaded] = useState(false);
 
   useEffect(() => {
-    const loadCashfreeSDK = () => {
-      const script = document.createElement('script');
-      script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
-      script.async = true;
-      script.onload = () => {
-        if (window.Cashfree) {
-          setIsCashfreeLoaded(true);
-        } else {
-          console.error('Cashfree SDK loaded but Cashfree object not found');
-        }
-      };
-      document.body.appendChild(script);
-    };
-
-    loadCashfreeSDK();
+    // Dynamically load Cashfree SDK
+    const script = document.createElement("script");
+    script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+    script.async = true;
+    script.onload = () => setIsCashfreeLoaded(true);
+    document.body.appendChild(script);
 
     return () => {
-      // Cleanup if needed
+      // Clean up the script when the component unmounts
+      document.body.removeChild(script);
     };
   }, []);
-
   const handleInputChange = (e) => {
     setAddress({ ...address, [e.target.id]: e.target.value });
   };
@@ -69,7 +61,7 @@ function Component() {
     }
   };
 
-
+ 
   const handleCountryChange = (value) => {
     setAddress({ ...address, country: value });
   };
@@ -77,92 +69,144 @@ function Component() {
   const handlePromoCodeChange = (e) => {
     setPromoCode(e.target.value);
   };
-  const handlePlaceOrder = async () => {
-    try {
-      const response = await fetch('/api/startpay', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ orderAmount, customerDetails }),
-      });
 
-      const data = await response.json();
 
-      if (response.ok && data.paymentSessionId) {
-        alert(`Order placed successfully. Payment session ID: ${data.paymentSessionId}`);
-        router.push(`/order-confirmation?orderId=${data.orderId}`);
-      } else {
-        console.error('Error:', data.error || 'Failed to create payment session');
-        alert('Failed to create payment session. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error creating payment session:', error);
-      alert('An error occurred. Please try again.');
-    }
-  };
-  // Modify getUserDetails to add more logging
-  async function getUserDetails(userId) {
-    console.log('getUserDetails called with userId:', userId);
-  
-    try {
-      const usersCollection = collection(db, 'users');
-      
-      console.log('Firestore collection:', usersCollection);
-  
-      const userQuery = query(usersCollection, where('userId', '==', userId));
-      
-      console.log('User Query:', userQuery);
-  
-      const querySnapshot = await getDocs(userQuery);
-      
-      console.log('Query Snapshot:', querySnapshot);
-      console.log('Is Query Snapshot empty?', querySnapshot.empty);
-  
-      if (!querySnapshot.empty) {
-        const userData = querySnapshot.docs[0].data();
-        
-        console.log('User Data Found:', userData);
-  
-        return {
-          email: userData.email,
-          phoneNumber: userData.phoneNumber,
-          fullName: userData.fullName
-        };
-      } else {
-        console.warn('No user document found for userId:', userId);
-        throw new Error('User not found in Firestore.');
-      }
-    } catch (error) {
-      console.error('Detailed Error in getUserDetails:', {
-        message: error.message,
-        stack: error.stack
-      });
-      throw error;
-    }
+const handlePlaceOrder = async () => {
+  console.log("Checking if Cashfree SDK is loaded...");
+  if (!isCashfreeLoaded || typeof window.Cashfree === 'undefined') {
+      console.error("Cashfree SDK is not loaded yet.");
+      alert("Cashfree SDK is not loaded yet. Please try again later.");
+      return;
   }
-// Function to get user details from Firestore
-async function getUserDetails(userId) {
-  try {
-    const usersCollection = collection(db, 'users');
-    const userQuery = query(usersCollection, where('userId', '==', userId));
-    const querySnapshot = await getDocs(userQuery);
 
-    if (!querySnapshot.empty) {
-      const userData = querySnapshot.docs[0].data();
-      return {
-        email: userData.email,
-        phoneNumber: userData.phoneNumber,
-        fullName: userData.fullName
+  console.log("Cashfree SDK is loaded.");
+  const cashfree = window.Cashfree;
+
+  try {
+      console.log("Fetching current user...");
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+
+      if (!currentUser) {
+          console.error("User is not logged in.");
+          alert("User not logged in.");
+          return;
+      }
+
+      console.log("Current user:", currentUser);
+      console.log("Fetching user details from Firestore...");
+      const userDetails = await getUserDetails(currentUser.uid);
+      console.log("User details:", userDetails);
+
+      console.log("Sending request to create payment session...");
+      const response = await fetch('/api/startpay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              orderDetails: { amount: cartTotal - discount, currency: 'INR' },
+              userDetails: {
+                  userId: currentUser.uid,
+                  email: userDetails.email,
+                  phoneNumber: userDetails.phone,
+                  fullName: userDetails.fullName,
+              },
+          }),
+      });
+
+      console.log("Response from payment session creation:", response);
+      if (!response.ok) {
+          console.error("Failed to create payment session.");
+          alert("Failed to create payment session.");
+          return;
+      }
+
+      const { paymentSessionId } = await response.json();
+      console.log("Payment session ID:", paymentSessionId);
+
+      const checkoutOptions = {
+          paymentSessionId,
+          returnUrl: process.env.NEXT_PUBLIC_RETURN_URL,
       };
-    } else {
-      throw new Error('User not found in Firestore.');
+      console.log("Checkout options:", checkoutOptions);
+
+      console.log("Starting Cashfree checkout...");
+      if (cashfree && typeof cashfree.pay === 'function') {
+          cashfree.pay(checkoutOptions).then((result) => {
+              console.log("Checkout result:", result);
+              if (result.error) {
+                  console.error("Payment failed:", result.error);
+                  alert("Payment failed.");
+              } else {
+                  console.log("Payment successful!");
+              }
+          });
+      } else {
+          console.error("Cashfree 'pay' function not available.");
+          alert("Payment initiation failed. Please contact support.");
+      }
+  } catch (error) {
+      console.error("Error placing order:", error);
+      alert("An unexpected error occurred. Please try again later.");
+  }
+};
+
+
+
+
+  
+
+// Function to get user details from Firestore
+async function getUserDetails(uid) {
+  try {
+    console.log(`Attempting to fetch user details for UID: ${uid}`);
+    
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    const userRef = doc(db, 'users', uid);
+    const userSnap = await getDoc(userRef);
+    
+    if (!userSnap.exists()) {
+      console.warn(`No user document found for UID: ${uid}. Creating default user document.`);
+      
+      // Create a default user document if it doesn't exist
+      const defaultUserData = {
+        uid: uid,
+        email: currentUser?.email || '', 
+        fullName: 'New User',
+        phone: '', 
+        createdAt: new Date()
+      };
+
+      // Set the default user document
+      await setDoc(userRef, defaultUserData);
+
+      console.log('Default user document created');
+      return defaultUserData;
     }
+    
+    const userData = userSnap.data();
+    console.log('User details found:', userData);
+    return userData;
   } catch (error) {
     console.error('Error fetching user details:', error);
-    throw error;
+    
+    // Fallback user details if everything fails
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    const fallbackUserData = {
+      uid: uid,
+      email: currentUser?.email || 'test@example.com',
+      fullName: 'Unknown User',
+      phone: '9999999999'
+    };
+
+    return fallbackUserData;
   }
 }
+
+
 
   const verifyPayment = async (orderId) => {
     try {
@@ -181,7 +225,7 @@ async function getUserDetails(userId) {
   };
 
   return (
-<div className="container gilroy mx-auto max-w-3xl px-4 py-12 md:px-6 md:py-16">
+<div className="container mx-auto max-w-3xl px-4 py-12 md:px-6 md:py-16">
     <div className="space-y-4">
       <h1 className="text-3xl font-bold tracking-tight">Checkout</h1>
       <p className="text-muted-foreground">
@@ -266,7 +310,6 @@ async function getUserDetails(userId) {
                 <SelectItem value="au">Australia</SelectItem>
                 <SelectItem value="de">Germany</SelectItem>
                 <SelectItem value="fr">France</SelectItem>
-                <SelectItem value="de">India</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -274,7 +317,7 @@ async function getUserDetails(userId) {
       </div>
       <div className="space-y-6">
         <div className="grid gap-2">
-          <Label htmlFor="promo-code">Promo Codes</Label>
+          <Label htmlFor="promo-code">Promo Code</Label>
           <div className="flex gap-2">
             <Input
               id="promo-code"
@@ -292,7 +335,7 @@ async function getUserDetails(userId) {
           <CardContent className="grid gap-2">
             <div className="flex items-center justify-between">
               <span>Subtotal</span>
-              <span>{cartTotal.toFixed(2)}</span>
+              <span>${cartTotal.toFixed(2)}</span>
             </div>
             {discount > 0 && ( 
               <div className="flex items-center justify-between">
@@ -303,16 +346,17 @@ async function getUserDetails(userId) {
             <Separator />
             <div className="flex items-center justify-between font-medium">
               <span>Total</span>
-              <span>{(cartTotal - discount).toFixed(2)}</span> 
+              <span>${(cartTotal - discount).toFixed(2)}</span> 
             </div>
           </CardContent>
         </Card>
       </div>
     </div>
     <div className="mt-8 flex justify-end">
-      <Button onClick={handlePlaceOrder} disabled={!isCashfreeLoaded}>
-        {isCashfreeLoaded ? "Place Order" : "Loading Cashfree..."}
-      </Button>
+    <Button onClick={handlePlaceOrder} disabled={!isCashfreeLoaded}>
+  {isCashfreeLoaded ? "Place Order" : "Loading Cashfree..."}
+</Button>
+
     </div>
   </div>
   );

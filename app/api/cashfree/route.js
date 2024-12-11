@@ -1,9 +1,12 @@
-import {load} from '@cashfreepayments/cashfree-js';
+import { load } from '@cashfreepayments/cashfree-js';
 
-let cashfree;
-var initializeSDK = async function () {          
-    cashfree = await load({
-        mode: "sandbox"
+let cashfreeInstance = null;
+
+export const initializeSDK = async () => {
+  if (!cashfreeInstance) {
+    cashfreeInstance = await load({
+      mode: process.env.NEXT_PUBLIC_CASHFREE_MODE || 'sandbox', // Default to sandbox
     });
+  }
+  return cashfreeInstance;
 };
-initializeSDK();

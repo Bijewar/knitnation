@@ -1,34 +1,43 @@
-import { NextResponse } from 'next/server';
-import { Cashfree } from "cashfree-pg";
-
-Cashfree.XClientId = process.env.NEXT_PUBLIC_CASHFREE_CLIENT_ID;
-Cashfree.XClientSecret = process.env.CASHFREE_CLIENT_SECRET;
-Cashfree.XEnvironment = Cashfree.Environment.SANDBOX; // Change to PRODUCTION for live environment
+import axios from 'axios';
 
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const orderId = searchParams.get('orderId');
-
-  if (!orderId) {
-    return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
-  }
-
   try {
-    const response = await Cashfree.PGOrderFetchPayments("2023-08-01", orderId);
-    console.log('Order payments fetched:', response.data);
+    const { searchParams } = new URL(request.url);
+    const orderId = searchParams.get('orderId');
 
-    let orderStatus;
-    if (response.data.filter(transaction => transaction.payment_status === "SUCCESS").length > 0) {
-      orderStatus = "Success";
-    } else if (response.data.filter(transaction => transaction.payment_status === "PENDING").length > 0) {
-      orderStatus = "Pending";
-    } else {
-      orderStatus = "Failure";
+    if (!orderId) {
+      return new Response(JSON.stringify({ error: 'Order ID is required' }), { status: 400 });
     }
 
-    return NextResponse.json({ status: orderStatus }, { status: 200 });
+    const CASHFREE_APP_ID = process.env.CASHFREE_APP_ID;
+    const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY;
+
+    const response = await axios.get(
+      `https://sandbox.cashfree.com/pg/orders/${orderId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-version': '2022-01-01',
+          'x-client-id': CASHFREE_APP_ID,
+          'x-client-secret': CASHFREE_SECRET_KEY,
+        },
+      }
+    );
+
+    const orderStatus = response.data.order_status;
+    
+    return new Response(
+      JSON.stringify({ 
+        status: orderStatus === 'PAID' ? 'SUCCESS' : 'FAILURE',
+        details: response.data 
+      }), 
+      { status: 200 }
+    );
   } catch (error) {
-    console.error('Error fetching payment status:', error);
-    return NextResponse.json({ error: 'Failed to fetch payment status', details: error.message }, { status: 500 });
+    console.error('Payment verification error:', error);
+    return new Response(
+      JSON.stringify({ error: 'Payment verification failed' }), 
+      { status: 500 }
+    );
   }
 }
