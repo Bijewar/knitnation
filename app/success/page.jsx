@@ -1,12 +1,14 @@
 "use client";
-import { CheckCircle } from 'lucide-react'
-import { Button } from "./ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card"
-import Link from "next/link"
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import css from '../../style/globals.css'
-export default function OrderConfirmation() {
+
+import React, { Suspense, useState, useEffect } from "react";
+import { CheckCircle } from "lucide-react";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import css from "../../style/globals.css";
+
+function OrderConfirmationContent() {
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,26 +16,23 @@ export default function OrderConfirmation() {
 
   useEffect(() => {
     try {
-      // Try to parse the order details from URL query
-      const orderDetailsParam = searchParams.get('details');
-      
+      // Parse the order details from URL query
+      const orderDetailsParam = searchParams.get("details");
+
       if (!orderDetailsParam) {
-        throw new Error('No order details found');
+        throw new Error("No order details found");
       }
 
-      // Decode and parse the order details
       const parsedOrderDetails = JSON.parse(decodeURIComponent(orderDetailsParam));
 
-      // Validate the parsed details
       if (!parsedOrderDetails || !parsedOrderDetails.orderNumber) {
-        throw new Error('Invalid order details');
+        throw new Error("Invalid order details");
       }
 
-      // Set the order details
       setOrderDetails(parsedOrderDetails);
       setLoading(false);
     } catch (err) {
-      console.error('Error processing order details:', err);
+      console.error("Error processing order details:", err);
       setError(err.message);
       setLoading(false);
     }
@@ -86,13 +85,14 @@ export default function OrderConfirmation() {
             <ul className="space-y-2">
               {orderDetails.items.map((item, index) => (
                 <li key={index} className="flex justify-between">
-                  <span>{item.quantity}x {item.name}</span>
+                  <span>
+                    {item.quantity}x {item.name}
+                  </span>
                   <span>${(item.quantity * item.price).toFixed(2)}</span>
                 </li>
               ))}
             </ul>
-            <div
-              className="mt-4 pt-4 border-t border-gray-200 flex justify-between font-semibold">
+            <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between font-semibold">
               <span>Total</span>
               <span>${orderDetails.total.toFixed(2)}</span>
             </div>
@@ -109,5 +109,13 @@ export default function OrderConfirmation() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function OrderConfirmation() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OrderConfirmationContent />
+    </Suspense>
   );
 }
