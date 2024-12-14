@@ -151,12 +151,13 @@ const RegistrationForm = () => {
                     />
                   </div>
                   <button
-                    id="sign-in-button"
                     type="submit"
                     disabled={loading}
-                    className="bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded top-10 relative"
+                    className=" bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded top-12 relative "
+
                   >
                     {loading && <CgSpinner size={20} className="mt-1 animate-spin" />}
+                  
                     <span>Send OTP via Email</span>
                   </button>
 
@@ -198,9 +199,7 @@ const RegistrationForm = () => {
               )}
             </form>
 
-            <p className="alr">
-              Already have an account? <Link href="/login">Login</Link>
-            </p>
+           
           </div>
         </div>
       </div>
