@@ -35,19 +35,6 @@ function Component() {
   const [promoCode, setPromoCode] = useState('');
   const [isCashfreeLoaded, setIsCashfreeLoaded] = useState(false);
 
-  useEffect(() => {
-    // Dynamically load Cashfree SDK
-    const script = document.createElement("script");
-    script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
-    script.async = true;
-    script.onload = () => setIsCashfreeLoaded(true);
-    document.body.appendChild(script);
-
-    return () => {
-      // Clean up the script when the component unmounts
-      document.body.removeChild(script);
-    };
-  }, []);
   const handleInputChange = (e) => {
     setAddress({ ...address, [e.target.id]: e.target.value });
   };
@@ -70,86 +57,156 @@ function Component() {
     setPromoCode(e.target.value);
   };
 
+// Import Razorpay script dynamically
+function loadRazorpayScript(src) {
+  return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+  });
+}
 
 const handlePlaceOrder = async () => {
-  console.log("Checking if Cashfree SDK is loaded...");
-  if (!isCashfreeLoaded || typeof window.Cashfree === 'undefined') {
-      console.error("Cashfree SDK is not loaded yet.");
-      alert("Cashfree SDK is not loaded yet. Please try again later.");
-      return;
+  console.log("Checking if Razorpay SDK is loaded...");
+  const razorpayLoaded = await loadRazorpayScript('https://checkout.razorpay.com/v1/checkout.js');
+
+  if (!razorpayLoaded) {
+    console.error("Razorpay SDK failed to load.");
+    alert("Failed to load Razorpay SDK. Please try again later.");
+    return;
   }
 
-  console.log("Cashfree SDK is loaded.");
-  const cashfree = window.Cashfree;
-
   try {
-      console.log("Fetching current user...");
-      const auth = getAuth();
-      const currentUser = auth.currentUser;
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
 
-      if (!currentUser) {
-          console.error("User is not logged in.");
-          alert("User not logged in.");
-          return;
-      }
+    if (!currentUser) {
+      console.error("User is not logged in.");
+      alert("User not logged in.");
+      return;
+    }
 
-      console.log("Current user:", currentUser);
-      console.log("Fetching user details from Firestore...");
-      const userDetails = await getUserDetails(currentUser.uid);
-      console.log("User details:", userDetails);
+    const userDetails = await getUserDetails(currentUser.uid);
 
-      console.log("Sending request to create payment session...");
-      const response = await fetch('/api/startpay', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-              orderDetails: { amount: cartTotal - discount, currency: 'INR' },
-              userDetails: {
-                  userId: currentUser.uid,
-                  email: userDetails.email,
-                  phoneNumber: userDetails.phone,
-                  fullName: userDetails.fullName,
-              },
-          }),
-      });
+    console.log("Sending request to create Razorpay order...");
+    const response = await fetch('/api/startpay', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: Math.round((cartTotal - discount) * 100), // Convert to paise, round to nearest integer
+        currency: 'INR',
+        receipt: `order_rcptid_${Date.now()}`,
+      }),
+    });
 
-      console.log("Response from payment session creation:", response);
-      if (!response.ok) {
-          console.error("Failed to create payment session.");
-          alert("Failed to create payment session.");
-          return;
-      }
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Failed to create Razorpay order:", errorData);
+      alert("Failed to create Razorpay order.");
+      return;
+    }
 
-      const { paymentSessionId } = await response.json();
-      console.log("Payment session ID:", paymentSessionId);
+    const { id: orderId } = await response.json();
+    console.log("Razorpay order created:", { orderId });
 
-      const checkoutOptions = {
-          paymentSessionId,
-          returnUrl: process.env.NEXT_PUBLIC_RETURN_URL,
-      };
-      console.log("Checkout options:", checkoutOptions);
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: Math.round((cartTotal - discount) * 100),
+      currency: 'INR',
+      name: "Your Shop Name",
+      description: "Test Transaction",
+      order_id: orderId,
+      handler: async function (response) {
+        console.log("Payment successful:", response);
 
-      console.log("Starting Cashfree checkout...");
-      if (cashfree && typeof cashfree.pay === 'function') {
-          cashfree.pay(checkoutOptions).then((result) => {
-              console.log("Checkout result:", result);
-              if (result.error) {
-                  console.error("Payment failed:", result.error);
-                  alert("Payment failed.");
-              } else {
-                  console.log("Payment successful!");
-              }
-          });
-      } else {
-          console.error("Cashfree 'pay' function not available.");
-          alert("Payment initiation failed. Please contact support.");
-      }
+        // Redirect to the success page with order details
+        const orderDetails = {
+          orderNumber: orderId,
+          estimatedDelivery: "June 15, 2023", // Replace with actual logic
+          items: cartItems, // Replace with actual cart items
+          total: cartTotal - discount,
+        };
+
+        const query = encodeURIComponent(JSON.stringify(orderDetails));
+        window.location.href = `/success?details=${query}`;
+      },
+      prefill: {
+        name: userDetails.fullName,
+        email: userDetails.email,
+        contact: userDetails.phone || '',
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (response) {
+      console.error("Payment failed:", response.error);
+      alert("Payment failed. Please try again.");
+    });
+
+    rzp.open();
   } catch (error) {
-      console.error("Error placing order:", error);
-      alert("An unexpected error occurred. Please try again later.");
+    console.error("Error placing order:", error);
+    alert("An unexpected error occurred. Please try again later.");
   }
 };
 
+
+
+// Function to get user details from Firestore
+async function getUserDetails(uid) {
+  try {
+      console.log(`Attempting to fetch user details for UID: ${uid}`);
+
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+
+      const userRef = doc(db, 'users', uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+          console.warn(`No user document found for UID: ${uid}. Creating default user document.`);
+
+          // Create a default user document if it doesn't exist
+          const defaultUserData = {
+              uid: uid,
+              email: currentUser?.email || '',
+              fullName: 'New User',
+              phone: '',
+              createdAt: new Date()
+          };
+
+          // Set the default user document
+          await setDoc(userRef, defaultUserData);
+
+          console.log('Default user document created');
+          return defaultUserData;
+      }
+
+      const userData = userSnap.data();
+      console.log('User details found:', userData);
+      return userData;
+  } catch (error) {
+      console.error('Error fetching user details:', error);
+
+      // Fallback user details if everything fails
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+
+      const fallbackUserData = {
+          uid: uid,
+          email: currentUser?.email || 'test@example.com',
+          fullName: 'Unknown User',
+          phone: '9999999999'
+      };
+
+      return fallbackUserData;
+  }
+}
 
 
 
@@ -353,8 +410,8 @@ async function getUserDetails(uid) {
       </div>
     </div>
     <div className="mt-8 flex justify-end">
-    <Button onClick={handlePlaceOrder} disabled={!isCashfreeLoaded}>
-  {isCashfreeLoaded ? "Place Order" : "Loadings Cashfree..."}
+    <Button onClick={handlePlaceOrder}>
+ Place Order
 </Button>
 
     </div>

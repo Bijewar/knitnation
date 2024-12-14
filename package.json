@@ -20,12 +20,13 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-separator": "^1.1.0",
-    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-slot": "^1.1.1",
     "@reduxjs/toolkit": "^2.2.3",
     "axios": "^1.7.9",
     "cashfree-pg": "^4.3.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "firebase": "^10.12.4",
     "firebase-admin": "^12.5.0",
@@ -38,6 +39,9 @@
     "ngrok": "^5.0.0-beta.2",
     "nodemailer": "^6.9.16",
     "otp-input-react": "^0.3.0",
+    "postcss": "^8.4.49",
+    "razorpay": "^2.9.5",
+    "razorpay-checkout": "^1.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
@@ -56,6 +60,6 @@
   "devDependencies": {
     "@types/react": "18.3.3",
     "autoprefixer": "^10.4.20",
-    "tailwindcss": "^3.3.0"
+    "tailwindcss": "^3.4.16"
   }
 }
