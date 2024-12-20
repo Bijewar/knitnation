@@ -33,7 +33,7 @@ const images = [
   '/straight.webp',
   '/cargo.webp',
   '/bootcut.webp',
-]; // Define your specific images here
+];
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -59,8 +59,8 @@ console.log("womensProducts from Redux:", womensProducts);
 
 
 
-  const HOVER_FLASH_DURATION = 0.3; // Smooth transition duration
-  const HOVER_FADE_DURATION = 0.3; // Smooth transition duration
+  const HOVER_FLASH_DURATION = 0.3; 
+  const HOVER_FADE_DURATION = 0.3; 
   const TRANSITION_TIMEOUT = 200;
 
   let isTransitioning = false;
@@ -69,7 +69,7 @@ console.log("womensProducts from Redux:", womensProducts);
     if (isTransitioning) return;
 
     if (hoverIndex !== -1 && hoverIndex !== productIndex) {
-      // Quickly revert the previous hover effect
+    
       gsap.to(`.product:nth-child(${hoverIndex + 1}) .productHighlight`, {
         opacity: 0,
         duration: 0.1,
@@ -182,7 +182,7 @@ console.log("womensProducts from Redux:", womensProducts);
       }
     };
     fetchData();
-  }, [dispatch]); // Fetch products on dispatch change
+  }, [dispatch]);
 
   let womenJeans = [];
   if (womensProducts && typeof womensProducts === 'object') {
@@ -222,16 +222,16 @@ console.log("womensProducts from Redux:", womensProducts);
 
   const handleCartClick = () => {
     if (!isCartOpen) {
-      // Store the current scroll position
+     
       setScrollPosition(window.scrollY);
 
-      // Prevent scrolling behind the cart
+    
       document.body.style.overflow = 'hidden';
     } else {
-      // Restore scrolling when closing the cart
+     
       document.body.style.overflow = 'auto';
 
-      // Scroll back to the previously saved position
+    
       window.scrollTo(0, scrollPosition);
     }
 
@@ -324,7 +324,7 @@ const handlePayment = ()=>{
       return;
     }
   
-    // Redirect to the product's detail page using its ID
+   
     router.push(`/product/${product.id}`);
   };
 
@@ -574,7 +574,7 @@ const handlePayment = ()=>{
           <div className="white-flash" style={{ opacity: isTransitioning ? 1 : 0 }}></div>
         </div>
         <button className="buy" onClick={() => handleBuyNow(product)}>
-          Buy Now placeholder
+          Buy Now
         </button>
         <div>
           <span>

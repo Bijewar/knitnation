@@ -57,7 +57,6 @@ function Component() {
     setPromoCode(e.target.value);
   };
 
-// Import Razorpay script dynamically
 function loadRazorpayScript(src) {
   return new Promise((resolve) => {
       const script = document.createElement('script');
@@ -121,7 +120,6 @@ const handlePlaceOrder = async () => {
       handler: async function (response) {
         console.log("Payment successful:", response);
 
-        // Redirect to the success page with order details
         const orderDetails = {
           orderNumber: orderId,
           estimatedDelivery: "June 15, 2023", // Replace with actual logic

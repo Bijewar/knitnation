@@ -79,8 +79,7 @@ const RegistrationForm = () => {
     try {
       const { signInWithEmailLink, createUserWithEmailAndPassword, updateProfile } = await import("firebase/auth");
 
-      // Here, you would normally verify the OTP
-      // For demonstration, I'm assuming OTP verification is successful.
+     
 
       const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
       const user = userCredential.user;
