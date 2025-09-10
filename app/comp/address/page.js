@@ -1,5 +1,4 @@
 "use client";
-import { initializeSDK } from '/app/api/cashfree/route';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
